@@ -1,0 +1,73 @@
+import cv2
+import numpy as np
+import mss
+import time
+from datetime import datetime
+import os
+import glob
+
+save_folder = os.path.join(os.getenv('LOCALAPPDATA'), 'KMRservice')
+os.makedirs(save_folder, exist_ok=True)
+
+max_folder_size = 1024 * 1024 * 1024
+max_duration = 600
+
+def get_folder_size(folder):
+    total = 0
+    for f in glob.glob(os.path.join(folder, '*')):
+        if os.path.isfile(f):
+            total += os.path.getsize(f)
+    return total
+
+def cleanup_old_files(folder, limit_bytes):
+    while get_folder_size(folder) > limit_bytes:
+        files = glob.glob(os.path.join(folder, '*.avi'))
+        if not files:
+            break
+        oldest_file = min(files, key=os.path.getctime)
+        try:
+            os.remove(oldest_file)
+            print(f"Deleted old file: {oldest_file}")
+        except Exception as e:
+            print(f"Failed to delete {oldest_file}: {e}")
+            break
+
+def get_filename():
+    now = datetime.now()
+    return os.path.join(save_folder, f"{now.strftime('%Y%m%d_%H%M%S')}.avi")
+
+print("KMRservice is running...")
+
+with mss.mss() as sct:
+    monitor = sct.monitors[1]
+
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+    fps = 20.0
+    width = monitor['width']
+    height = monitor['height']
+
+    out = cv2.VideoWriter(get_filename(), fourcc, fps, (width, height))
+    start_time = time.time()
+
+    while True:
+        try:
+            img = np.array(sct.grab(monitor))
+            frame = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+            out.write(frame)
+
+            if time.time() - start_time > max_duration:
+                out.release()
+                cleanup_old_files(save_folder, max_folder_size)
+                out = cv2.VideoWriter(get_filename(), fourcc, fps, (width, height))
+                start_time = time.time()
+
+            time.sleep(1 / fps)
+
+        except Exception as e:
+            print(f"Error occurred: {e}. Retrying in 2 seconds...")
+            time.sleep(2)
+            try:
+                out.release()
+            except:
+                pass
+            out = cv2.VideoWriter(get_filename(), fourcc, fps, (width, height))

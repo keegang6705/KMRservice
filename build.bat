@@ -1,0 +1,1 @@
+pyinstaller --onedir --noconsole --noconfirm --clean --icon=icon.png  KMRservice.pwy
