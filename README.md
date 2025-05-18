@@ -1,6 +1,6 @@
-# KMservice - Lightweight Background Screen Recorder
+# KMRservice - Lightweight Background Screen Recorder
 
-**KMservice** is a minimal screen recording utility written in Python, designed to run silently in the background with very low resource usage. It captures your screen continuously and saves the recordings in manageable chunks.
+**KMRservice** is a minimal screen recording utility written in Python, designed to run silently in the background with very low resource usage. It captures your screen continuously and saves the recordings in manageable chunks.
 
 ## Features
 
@@ -9,7 +9,7 @@
 - 🧹 Deletes oldest files when total folder size exceeds a defined limit
 - 🕵️ Runs in the background without a console window (when built with `--noconsole`)
 - 📁 Stores recordings in a user-accessible folder:  
-  `%LOCALAPPDATA%\KMservice`
+  `%LOCALAPPDATA%\KMRservice`
 - ⚙️ No admin privileges required
 
 ## Installation
@@ -23,13 +23,13 @@
 2. **Run the script**:
 
     ```bash
-    python kmservice.py
+    python KMRservice.py
     ```
 
 3. *(Optional)* **Build to `.exe` for distribution**:
 
     ```bash
-    pyinstaller --onefile --noconsole kmservice.py
+    pyinstaller --onefile --noconsole KMRservice.py
     ```
 
     This creates a standalone executable in the `dist/` folder.
