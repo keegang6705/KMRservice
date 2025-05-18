@@ -1,6 +1,6 @@
 # KMRservice - Lightweight Background Screen Recorder
 
-**KMRservice** is a minimal screen recording utility written in Python, designed to run silently in the background with very low resource usage. It captures your screen continuously and saves the recordings in manageable chunks.
+**Keegang Monitor Recording Service** is a minimal screen recording utility written in Python, designed to run silently in the background with very low resource usage. It captures your screen continuously and saves the recordings in manageable chunks.
 
 ## Features
 
